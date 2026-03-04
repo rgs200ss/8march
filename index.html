@@ -52,6 +52,14 @@
       -webkit-backdrop-filter: blur(10px);
       overflow:hidden;
       position:relative;
+
+      /* (6) subtle “breathing” / float */
+      animation: cardFloat 6.5s ease-in-out infinite;
+    }
+    @keyframes cardFloat{
+      0%   { transform: translateY(0px); }
+      50%  { transform: translateY(-4px); }
+      100% { transform: translateY(0px); }
     }
 
     .topline{
@@ -129,6 +137,7 @@
       cursor:pointer;
       transition: transform .12s ease, background .2s ease, border-color .2s ease;
       user-select:none;
+      -webkit-tap-highlight-color: transparent;
     }
     button:hover{ transform: translateY(-1px); }
     button:active{ transform: translateY(0px); }
@@ -177,8 +186,9 @@
       bottom:-42px;
       opacity:.55;
       transform: rotate(12deg);
-      pointer-events:none;
+      pointer-events:auto;
       z-index:1;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .footerNote{
@@ -264,6 +274,71 @@
       line-height:1.45;
       color: rgba(30,30,30,.62);
     }
+
+    /* "3 мини-факта" chips */
+    .chips{
+      margin-top: 10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .chip{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.55);
+      border-radius: 16px;
+      padding: 12px 12px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+
+      opacity:0;
+      transform: translateY(10px);
+      transition: opacity .45s ease, transform .45s ease;
+      will-change: transform, opacity;
+    }
+    .chip.show{
+      opacity:1;
+      transform: translateY(0px);
+    }
+    .chipNum{
+      width:24px; height:24px;
+      border-radius: 999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 12px;
+      color: rgba(30,30,30,.78);
+      background: rgba(232,207,198,.55);
+      flex:0 0 auto;
+      margin-top: 1px;
+    }
+    .chipText{
+      font-size: 15px;
+      line-height:1.45;
+      color: rgba(30,30,30,.68);
+    }
+
+    /* toast */
+    .toast{
+      position:absolute;
+      left:50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      background: rgba(30,30,30,.86);
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .25s ease, transform .25s ease;
+      z-index:4;
+      white-space: nowrap;
+    }
+    .toast.show{
+      opacity:1;
+      transform: translateX(-50%) translateY(-2px);
+    }
   </style>
 </head>
 
@@ -272,6 +347,7 @@
     <div class="phone">
       <div class="card" id="card">
         <div class="confetti-layer" id="confetti"></div>
+        <div class="toast" id="toast">🫶</div>
 
         <div class="topline">
           <div class="badge"><span class="dot"></span> 08 March</div>
@@ -288,7 +364,7 @@
 
         <div class="progress" id="progress"></div>
 
-        <svg class="flower" viewBox="0 0 200 200" aria-hidden="true">
+        <svg class="flower" id="flower" viewBox="0 0 200 200" aria-hidden="true">
           <defs>
             <radialGradient id="g" cx="50%" cy="50%" r="60%">
               <stop offset="0%" stop-color="#E8CFC6" stop-opacity="1"/>
@@ -308,60 +384,15 @@
   </div>
 
   <script>
+    // имя фиксировано навсегда
     const FIXED_NAME = "Мария";
 
     const qs = new URLSearchParams(location.search);
-    const fromQuery = (qs.get("name") || "").trim();
+    const fromQuery = (qs.get("name") || "").trim(); // оставлено, но FIXED_NAME всегда победит
     const rawName = (FIXED_NAME || fromQuery).trim();
     const safeName = rawName ? rawName.slice(0, 24) : "тебя";
 
-    // ==============================
-    // Google Forms logger (GitHub Pages friendly)
-    // ==============================
-    const FORM_ID = "1FAIpQLSc2ICFLIpyfQl6yFbuw2OJj3D_p7lmuPdtePHG2kLsj7L6FlQ";
-    const ENTRY = {
-      visit_id: "entry.1702122840",
-      event:    "entry.1594953572",
-      name:     "entry.1024299869",
-      mood:     "entry.554069145",
-      page:     "entry.558136667",
-      ua:       "entry.402390414",
-      ts:       "entry.1889053",
-    };
-
-    function getVisitId(){
-      const key = "march8_visit_id";
-      let id = localStorage.getItem(key);
-      if (!id){
-        id = (crypto?.randomUUID?.() || ("v_" + Math.random().toString(16).slice(2) + Date.now().toString(16)));
-        localStorage.setItem(key, id);
-      }
-      return id;
-    }
-
-    // антидубликаты, чтобы не спамить форму
-    const _lastSent = new Map();
-    function logEvent(evt, moodValue = ""){
-      try{
-        const now = Date.now();
-        const k = evt + ":" + String(moodValue);
-        const prev = _lastSent.get(k) || 0;
-        if (now - prev < 1200) return;
-        _lastSent.set(k, now);
-
-        const url = new URL(`https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`);
-        url.searchParams.set(ENTRY.visit_id, getVisitId());
-        url.searchParams.set(ENTRY.event, evt);
-        url.searchParams.set(ENTRY.name, rawName || "");
-        url.searchParams.set(ENTRY.mood, String(moodValue ?? ""));
-        url.searchParams.set(ENTRY.page, String(idx + 1));
-        url.searchParams.set(ENTRY.ua, navigator.userAgent);
-        url.searchParams.set(ENTRY.ts, new Date().toISOString());
-
-        fetch(url.toString(), { method: "POST", mode: "no-cors", keepalive: true });
-      }catch(e){}
-    }
-
+    // iOS-like tap sound
     let audioCtx;
     function tapSound(){
       try{
@@ -386,16 +417,27 @@
       } catch(e){}
     }
 
+    // soft vibration
     function softVibrate(ms=10){
       try{
         if (navigator.vibrate) navigator.vibrate(ms);
       } catch(e){}
     }
 
+    // toast
+    const toastEl = document.getElementById("toast");
+    let toastTimer = null;
+    function showToast(text){
+      toastEl.textContent = text;
+      toastEl.classList.add("show");
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1200);
+    }
+
+    // confetti
     const confettiEl = document.getElementById("confetti");
-    function softConfetti(){
+    function softConfetti(count = 8){
       const rect = confettiEl.getBoundingClientRect();
-      const count = 8;
 
       for(let i=0; i<count; i++){
         const d = document.createElement("div");
@@ -413,7 +455,6 @@
         const dark = 0.14 + Math.random() * 0.14;
         d.style.background = `rgba(30,30,30,${dark})`;
         d.style.boxShadow = `0 0 0 ${8 + Math.random()*10}px rgba(232,207,198,${0.12 + Math.random()*0.14})`;
-
         d.style.animationDelay = (Math.random() * 140) + "ms";
 
         confettiEl.appendChild(d);
@@ -421,6 +462,7 @@
       }
     }
 
+    // steps
     const steps = [
       {
         title: "Ты только что отсканировала QR-код.",
@@ -437,6 +479,16 @@
         title: "Мы знакомы совсем недавно.",
         body: ["Но за это время ты уже успела сделать наши разговоры очень интересными."],
         next: "Ещё →"
+      },
+      {
+        title: "Три маленьких факта.",
+        body: ["Если коротко:"], // ← заменили спорный текст
+        chips: [
+          "С тобой легко общаться — без напряжения.",
+          "Ты умеешь делать простые вещи красивыми.",
+          "После наших разговоров настроение обычно лучше, чем было."
+        ],
+        next: "Дальше →"
       },
       {
         title: "Мини-сканер настроения.",
@@ -469,6 +521,8 @@
     const smileBtn = document.getElementById("smileBtn");
     const smallName = document.getElementById("smallName");
     const progressEl = document.getElementById("progress");
+    const cardEl = document.getElementById("card");
+    const flowerEl = document.getElementById("flower");
 
     smallName.textContent = rawName ? ("for " + safeName) : "for you";
 
@@ -482,6 +536,7 @@
     let idx = 0;
     let smiled = false;
 
+    // mood scanner state
     let mood = 68;
 
     function moodText(v){
@@ -501,10 +556,6 @@
       backBtn.style.opacity = idx === 0 ? .45 : 1;
 
       const current = steps[idx];
-
-      // лог: финальный экран показан
-      if (current.final) logEvent("final_screen", mood);
-
       nextBtn.classList.toggle("hidden", !!current.final);
       smileBtn.classList.toggle("hidden", !(current.final && !smiled));
       nextBtn.textContent = current.next || "Продолжить →";
@@ -530,6 +581,31 @@
         stepEl.appendChild(p);
       });
 
+      // chips block (with staggered reveal)
+      if (current.chips && current.chips.length){
+        const wrap = document.createElement("div");
+        wrap.className = "chips fade";
+        stepEl.appendChild(wrap);
+
+        current.chips.forEach((text, i) => {
+          const chip = document.createElement("div");
+          chip.className = "chip";
+          chip.innerHTML = `
+            <div class="chipNum">${i+1}</div>
+            <div class="chipText">${text}</div>
+          `;
+          wrap.appendChild(chip);
+        });
+
+        // IMPORTANT: force hidden state + show one-by-one
+        setTimeout(() => {
+          const cs = wrap.querySelectorAll(".chip");
+          cs.forEach((c) => c.classList.remove("show"));
+          cs.forEach((c, i) => setTimeout(() => c.classList.add("show"), 220 + i * 320));
+        }, 60);
+      }
+
+      // mood scanner
       if (current.moodScanner){
         const box = document.createElement("div");
         box.className = "scanner fade";
@@ -557,12 +633,7 @@
             mh.textContent = moodText(mood);
           });
 
-          // лог: значение ползунка выбрано (по отпусканию)
-          r.addEventListener("change", () => {
-            tapSound();
-            softVibrate(8);
-            logEvent("mood_change", mood);
-          });
+          r.addEventListener("change", () => { tapSound(); softVibrate(8); });
         }, 0);
       }
 
@@ -591,14 +662,12 @@
       softVibrate(7);
       if (idx < steps.length - 1) idx++;
       render();
-      logEvent("next", mood);
     }
     function goBack(){
       tapSound();
       softVibrate(7);
       if (idx > 0) idx--;
       render();
-      logEvent("back", mood);
     }
 
     nextBtn.addEventListener("click", goNext);
@@ -608,8 +677,7 @@
       tapSound();
       softVibrate(12);
       smiled = true;
-      softConfetti();
-      logEvent("smiled", mood);
+      softConfetti(10);
       render();
     });
 
@@ -620,9 +688,48 @@
       if (e.key === "ArrowLeft") goBack();
     });
 
+    // (5) easter egg: long-press anywhere on the card + double-tap on flower
+    let pressTimer = null;
+    let pressed = false;
+
+    function egg(){
+      tapSound();
+      softVibrate(18);
+      softConfetti(10);
+      showToast("🫶 Пасхалка найдена");
+    }
+
+    function startPress(){
+      pressed = true;
+      pressTimer = setTimeout(() => {
+        if (!pressed) return;
+        egg();
+      }, 700);
+    }
+    function endPress(){
+      pressed = false;
+      if (pressTimer) clearTimeout(pressTimer);
+      pressTimer = null;
+    }
+
+    // long-press on the whole card (more reliable)
+    cardEl.addEventListener("pointerdown", (e) => {
+      if (e.target && (e.target.closest("button") || e.target.closest("input"))) return;
+      startPress();
+    });
+    cardEl.addEventListener("pointerup", endPress);
+    cardEl.addEventListener("pointercancel", endPress);
+    cardEl.addEventListener("pointerleave", endPress);
+
+    // double-tap on flower (backup)
+    let lastTap = 0;
+    flowerEl.addEventListener("click", () => {
+      const now = Date.now();
+      if (now - lastTap < 320) egg();
+      lastTap = now;
+    });
+
     render();
-    // лог: страница открыта
-    logEvent("open", mood);
   </script>
 </body>
 </html>
