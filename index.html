@@ -308,7 +308,6 @@
   </div>
 
   <script>
-    
     const FIXED_NAME = "Мария";
 
     const qs = new URLSearchParams(location.search);
@@ -316,7 +315,53 @@
     const rawName = (FIXED_NAME || fromQuery).trim();
     const safeName = rawName ? rawName.slice(0, 24) : "тебя";
 
-    
+    // ==============================
+    // Google Forms logger (GitHub Pages friendly)
+    // ==============================
+    const FORM_ID = "1FAIpQLSc2ICFLIpyfQl6yFbuw2OJj3D_p7lmuPdtePHG2kLsj7L6FlQ";
+    const ENTRY = {
+      visit_id: "entry.1702122840",
+      event:    "entry.1594953572",
+      name:     "entry.1024299869",
+      mood:     "entry.554069145",
+      page:     "entry.558136667",
+      ua:       "entry.402390414",
+      ts:       "entry.1889053",
+    };
+
+    function getVisitId(){
+      const key = "march8_visit_id";
+      let id = localStorage.getItem(key);
+      if (!id){
+        id = (crypto?.randomUUID?.() || ("v_" + Math.random().toString(16).slice(2) + Date.now().toString(16)));
+        localStorage.setItem(key, id);
+      }
+      return id;
+    }
+
+    // антидубликаты, чтобы не спамить форму
+    const _lastSent = new Map();
+    function logEvent(evt, moodValue = ""){
+      try{
+        const now = Date.now();
+        const k = evt + ":" + String(moodValue);
+        const prev = _lastSent.get(k) || 0;
+        if (now - prev < 1200) return;
+        _lastSent.set(k, now);
+
+        const url = new URL(`https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`);
+        url.searchParams.set(ENTRY.visit_id, getVisitId());
+        url.searchParams.set(ENTRY.event, evt);
+        url.searchParams.set(ENTRY.name, rawName || "");
+        url.searchParams.set(ENTRY.mood, String(moodValue ?? ""));
+        url.searchParams.set(ENTRY.page, String(idx + 1));
+        url.searchParams.set(ENTRY.ua, navigator.userAgent);
+        url.searchParams.set(ENTRY.ts, new Date().toISOString());
+
+        fetch(url.toString(), { method: "POST", mode: "no-cors", keepalive: true });
+      }catch(e){}
+    }
+
     let audioCtx;
     function tapSound(){
       try{
@@ -341,18 +386,16 @@
       } catch(e){}
     }
 
-    
     function softVibrate(ms=10){
       try{
         if (navigator.vibrate) navigator.vibrate(ms);
       } catch(e){}
     }
 
-    
     const confettiEl = document.getElementById("confetti");
     function softConfetti(){
       const rect = confettiEl.getBoundingClientRect();
-      const count = 8; 
+      const count = 8;
 
       for(let i=0; i<count; i++){
         const d = document.createElement("div");
@@ -367,7 +410,6 @@
         d.style.left = x + "px";
         d.style.top  = y + "px";
 
-        
         const dark = 0.14 + Math.random() * 0.14;
         d.style.background = `rgba(30,30,30,${dark})`;
         d.style.boxShadow = `0 0 0 ${8 + Math.random()*10}px rgba(232,207,198,${0.12 + Math.random()*0.14})`;
@@ -379,7 +421,6 @@
       }
     }
 
-    
     const steps = [
       {
         title: "Ты только что отсканировала QR-код.",
@@ -441,7 +482,6 @@
     let idx = 0;
     let smiled = false;
 
-    
     let mood = 68;
 
     function moodText(v){
@@ -461,6 +501,10 @@
       backBtn.style.opacity = idx === 0 ? .45 : 1;
 
       const current = steps[idx];
+
+      // лог: финальный экран показан
+      if (current.final) logEvent("final_screen", mood);
+
       nextBtn.classList.toggle("hidden", !!current.final);
       smileBtn.classList.toggle("hidden", !(current.final && !smiled));
       nextBtn.textContent = current.next || "Продолжить →";
@@ -486,7 +530,6 @@
         stepEl.appendChild(p);
       });
 
-      
       if (current.moodScanner){
         const box = document.createElement("div");
         box.className = "scanner fade";
@@ -502,7 +545,6 @@
 
         stepEl.appendChild(box);
 
-        
         setTimeout(() => {
           const r = document.getElementById("mRange");
           const mv = document.getElementById("mVal");
@@ -515,8 +557,12 @@
             mh.textContent = moodText(mood);
           });
 
-          
-          r.addEventListener("change", () => { tapSound(); softVibrate(8); });
+          // лог: значение ползунка выбрано (по отпусканию)
+          r.addEventListener("change", () => {
+            tapSound();
+            softVibrate(8);
+            logEvent("mood_change", mood);
+          });
         }, 0);
       }
 
@@ -545,12 +591,14 @@
       softVibrate(7);
       if (idx < steps.length - 1) idx++;
       render();
+      logEvent("next", mood);
     }
     function goBack(){
       tapSound();
       softVibrate(7);
       if (idx > 0) idx--;
       render();
+      logEvent("back", mood);
     }
 
     nextBtn.addEventListener("click", goNext);
@@ -561,6 +609,7 @@
       softVibrate(12);
       smiled = true;
       softConfetti();
+      logEvent("smiled", mood);
       render();
     });
 
@@ -572,6 +621,8 @@
     });
 
     render();
+    // лог: страница открыта
+    logEvent("open", mood);
   </script>
 </body>
 </html>
