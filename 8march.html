@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>08.03</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#F8F6F3;
+      --text:#1E1E1E;
+      --muted:rgba(30,30,30,.62);
+      --card:rgba(255,255,255,.62);
+      --border:rgba(30,30,30,.10);
+      --accent:#E8CFC6;
+      --shadow: 0 18px 50px rgba(30,30,30,.10);
+      --radius: 22px;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 800px at 20% 10%, rgba(232,207,198,.55), transparent 60%),
+        radial-gradient(900px 700px at 85% 30%, rgba(232,207,198,.35), transparent 60%),
+        linear-gradient(180deg, var(--bg), #ffffff);
+      color:var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow-x:hidden;
+    }
+
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 22px 14px;
+    }
+    .phone{ width:min(420px, 100%); position:relative; }
+
+    .card{
+      background: var(--card);
+      border:1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 26px 20px 18px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .topline{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+      position:relative;
+      z-index:2;
+    }
+    .badge{
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--muted);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:999px;
+      background: var(--accent);
+      box-shadow:0 0 0 6px rgba(232,207,198,.28);
+    }
+
+    .step{
+      min-height: 250px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:14px;
+      padding: 4px 4px 10px;
+      position:relative;
+      z-index:2;
+    }
+
+    h1{
+      margin:0;
+      font-family:"Playfair Display", serif;
+      font-weight:600;
+      font-size: 34px;
+      line-height:1.08;
+      letter-spacing:-0.02em;
+    }
+    p{
+      margin:0;
+      font-size: 16px;
+      line-height:1.55;
+      color: var(--muted);
+    }
+    .name{
+      font-family:"Playfair Display", serif;
+      font-weight:600;
+      color: var(--text);
+      font-size: 30px;
+      letter-spacing:-0.01em;
+    }
+
+    .controls{
+      display:flex;
+      gap:10px;
+      margin-top: 18px;
+      flex-wrap:wrap;
+      position:relative;
+      z-index:2;
+    }
+    button{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.7);
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      cursor:pointer;
+      transition: transform .12s ease, background .2s ease, border-color .2s ease;
+      user-select:none;
+    }
+    button:hover{ transform: translateY(-1px); }
+    button:active{ transform: translateY(0px); }
+    button.primary{
+      background: var(--text);
+      color: #fff;
+      border-color: rgba(30,30,30,.22);
+    }
+    button.ghost{ background: transparent; }
+
+    .progress{
+      display:flex;
+      gap:6px;
+      justify-content:center;
+      margin-top: 14px;
+      position:relative;
+      z-index:2;
+    }
+    .pill{
+      width: 18px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(30,30,30,.12);
+      transition: width .25s ease, background .25s ease;
+    }
+    .pill.active{
+      width: 30px;
+      background: rgba(30,30,30,.38);
+    }
+
+    .fade{
+      opacity:0;
+      transform: translateY(6px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .fade.show{
+      opacity:1;
+      transform: translateY(0px);
+    }
+
+    .flower{
+      width: 140px;
+      height: 140px;
+      position:absolute;
+      right:-30px;
+      bottom:-42px;
+      opacity:.55;
+      transform: rotate(12deg);
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .footerNote{
+      margin-top: 12px;
+      font-size: 13px;
+      color: rgba(30,30,30,.52);
+      text-align:center;
+    }
+
+    .hidden{ display:none; }
+
+    @media (max-width:380px){
+      h1{ font-size: 30px; }
+      .name{ font-size: 26px; }
+      .step{ min-height: 265px; }
+    }
+
+    /* subtle grain */
+    .card:before{
+      content:"";
+      position:absolute; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+      opacity:.12;
+      mix-blend-mode:multiply;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    /* Confetti dots */
+    .confetti-layer{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:3;
+    }
+    .c-dot{
+      position:absolute;
+      border-radius:999px;
+      opacity:0;
+      transform: translateY(10px) scale(.9);
+      animation: pop 980ms cubic-bezier(.2,.8,.2,1) forwards;
+    }
+    @keyframes pop{
+      0%   { opacity:0; transform: translateY(14px) scale(.75); }
+      18%  { opacity:.95; transform: translateY(0px) scale(1); }
+      100% { opacity:0; transform: translateY(-30px) scale(1.06); }
+    }
+
+    /* Mood scanner */
+    .scanner{
+      margin-top: 10px;
+      padding: 14px 14px 12px;
+      border-radius: 18px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.55);
+    }
+    .scannerTop{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 10px;
+    }
+    .scannerLabel{
+      font-size: 13px;
+      color: rgba(30,30,30,.56);
+      letter-spacing:.08em;
+      text-transform: uppercase;
+    }
+    .scannerValue{
+      font-size: 13px;
+      color: rgba(30,30,30,.70);
+      font-variant-numeric: tabular-nums;
+    }
+    input[type="range"]{
+      width:100%;
+      accent-color: var(--text);
+    }
+    .scannerHint{
+      margin-top: 10px;
+      font-size: 14px;
+      line-height:1.45;
+      color: rgba(30,30,30,.62);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="phone">
+      <div class="card" id="card">
+        <div class="confetti-layer" id="confetti"></div>
+
+        <div class="topline">
+          <div class="badge"><span class="dot"></span> 08 March</div>
+          <div class="badge" id="smallName">for …</div>
+        </div>
+
+        <div class="step" id="step"></div>
+
+        <div class="controls">
+          <button class="ghost" id="backBtn">Назад</button>
+          <button class="primary" id="nextBtn">Продолжить →</button>
+          <button class="primary hidden" id="smileBtn">Нажать если улыбнулась 🙂</button>
+        </div>
+
+        <div class="progress" id="progress"></div>
+
+        <svg class="flower" viewBox="0 0 200 200" aria-hidden="true">
+          <defs>
+            <radialGradient id="g" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stop-color="#E8CFC6" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#E8CFC6" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle cx="100" cy="100" r="92" fill="url(#g)"/>
+          <g fill="none" stroke="rgba(30,30,30,.14)" stroke-width="2">
+            <path d="M55 120c25-10 45-35 45-70"/>
+            <path d="M85 140c25-10 45-35 45-70"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="footerNote">Открой на телефоне — так красивее ✨</div>
+    </div>
+  </div>
+
+  <script>
+    
+    const FIXED_NAME = "Мария";
+
+    const qs = new URLSearchParams(location.search);
+    const fromQuery = (qs.get("name") || "").trim();
+    const rawName = (FIXED_NAME || fromQuery).trim();
+    const safeName = rawName ? rawName.slice(0, 24) : "тебя";
+
+    
+    let audioCtx;
+    function tapSound(){
+      try{
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        const t = audioCtx.currentTime;
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(230, t);
+        osc.frequency.exponentialRampToValueAtTime(150, t + 0.03);
+
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.11, t + 0.005);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + 0.06);
+      } catch(e){}
+    }
+
+    
+    function softVibrate(ms=10){
+      try{
+        if (navigator.vibrate) navigator.vibrate(ms);
+      } catch(e){}
+    }
+
+    
+    const confettiEl = document.getElementById("confetti");
+    function softConfetti(){
+      const rect = confettiEl.getBoundingClientRect();
+      const count = 8; 
+
+      for(let i=0; i<count; i++){
+        const d = document.createElement("div");
+        d.className = "c-dot";
+
+        const x = Math.random() * (rect.width - 12) + 6;
+        const y = rect.height * (0.58 + Math.random() * 0.20);
+
+        const s = 6 + Math.random() * 6;
+        d.style.width = s + "px";
+        d.style.height = s + "px";
+        d.style.left = x + "px";
+        d.style.top  = y + "px";
+
+        
+        const dark = 0.14 + Math.random() * 0.14;
+        d.style.background = `rgba(30,30,30,${dark})`;
+        d.style.boxShadow = `0 0 0 ${8 + Math.random()*10}px rgba(232,207,198,${0.12 + Math.random()*0.14})`;
+
+        d.style.animationDelay = (Math.random() * 140) + "ms";
+
+        confettiEl.appendChild(d);
+        d.addEventListener("animationend", () => d.remove());
+      }
+    }
+
+    
+    const steps = [
+      {
+        title: "Ты только что отсканировала QR-код.",
+        body: ["Это значит, что ты нашла одно очень маленькое поздравление."],
+        next: "Продолжить →"
+      },
+      {
+        title: "Это поздравление должно было найти только одного человека.",
+        body: [],
+        specialName: true,
+        next: "Дальше →"
+      },
+      {
+        title: "Мы знакомы совсем недавно.",
+        body: ["Но за это время ты уже успела сделать наши разговоры очень интересными."],
+        next: "Ещё →"
+      },
+      {
+        title: "Мини-сканер настроения.",
+        body: ["На сколько процентов у тебя сегодня хорошее настроение?"],
+        moodScanner: true,
+        next: "Готово →"
+      },
+      {
+        title: "Сегодня принято поздравлять девушек.",
+        body: [
+          "Но я хотел поздравить не всех девушек мира.",
+          "А одну конкретную."
+        ],
+        next: "Кого? →",
+        tail: "Тебя."
+      },
+      {
+        title: "С 8 марта 🌸",
+        body: [
+          "Пусть у тебя сегодня будет много улыбок, хорошего настроения и немного приятных неожиданностей.",
+          "И одна из них — это это поздравление."
+        ],
+        final: true
+      }
+    ];
+
+    const stepEl = document.getElementById("step");
+    const nextBtn = document.getElementById("nextBtn");
+    const backBtn = document.getElementById("backBtn");
+    const smileBtn = document.getElementById("smileBtn");
+    const smallName = document.getElementById("smallName");
+    const progressEl = document.getElementById("progress");
+
+    smallName.textContent = rawName ? ("for " + safeName) : "for you";
+
+    const pills = steps.map(() => {
+      const d = document.createElement("div");
+      d.className = "pill";
+      progressEl.appendChild(d);
+      return d;
+    });
+
+    let idx = 0;
+    let smiled = false;
+
+    
+    let mood = 68;
+
+    function moodText(v){
+      if (v < 40) return "Принято. Тогда добавим чуть-чуть приятного 🙂";
+      if (v < 70) return "Хорошо. Пусть станет ещё лучше ✨";
+      return "Отлично. Тогда просто закрепляем настроение 🌸";
+    }
+
+    function setPills(){
+      pills.forEach((p,i) => p.classList.toggle("active", i === idx));
+    }
+
+    function render(){
+      setPills();
+
+      backBtn.disabled = idx === 0;
+      backBtn.style.opacity = idx === 0 ? .45 : 1;
+
+      const current = steps[idx];
+      nextBtn.classList.toggle("hidden", !!current.final);
+      smileBtn.classList.toggle("hidden", !(current.final && !smiled));
+      nextBtn.textContent = current.next || "Продолжить →";
+
+      stepEl.innerHTML = "";
+
+      const h = document.createElement("h1");
+      h.className = "fade";
+      h.textContent = current.title;
+      stepEl.appendChild(h);
+
+      if (current.specialName){
+        const nameDiv = document.createElement("div");
+        nameDiv.className = "name fade";
+        nameDiv.textContent = rawName ? safeName : "…";
+        stepEl.appendChild(nameDiv);
+      }
+
+      (current.body || []).forEach((t) => {
+        const p = document.createElement("p");
+        p.className = "fade";
+        p.textContent = t;
+        stepEl.appendChild(p);
+      });
+
+      
+      if (current.moodScanner){
+        const box = document.createElement("div");
+        box.className = "scanner fade";
+
+        box.innerHTML = `
+          <div class="scannerTop">
+            <div class="scannerLabel">Mood scan</div>
+            <div class="scannerValue"><span id="mVal">${mood}</span>%</div>
+          </div>
+          <input id="mRange" type="range" min="0" max="100" value="${mood}" />
+          <div class="scannerHint" id="mHint">${moodText(mood)}</div>
+        `;
+
+        stepEl.appendChild(box);
+
+        
+        setTimeout(() => {
+          const r = document.getElementById("mRange");
+          const mv = document.getElementById("mVal");
+          const mh = document.getElementById("mHint");
+          if (!r) return;
+
+          r.addEventListener("input", () => {
+            mood = Number(r.value);
+            mv.textContent = mood;
+            mh.textContent = moodText(mood);
+          });
+
+          
+          r.addEventListener("change", () => { tapSound(); softVibrate(8); });
+        }, 0);
+      }
+
+      if (current.tail){
+        const tail = document.createElement("div");
+        tail.className = "name fade";
+        tail.style.marginTop = "6px";
+        tail.textContent = current.tail;
+        stepEl.appendChild(tail);
+      }
+
+      if (current.final && smiled){
+        const p = document.createElement("p");
+        p.className = "fade";
+        p.style.marginTop = "8px";
+        p.textContent = "Отлично. Значит миссия выполнена 🙂";
+        stepEl.appendChild(p);
+      }
+
+      const items = stepEl.querySelectorAll(".fade");
+      items.forEach((el, i) => setTimeout(() => el.classList.add("show"), 80 + i * 180));
+    }
+
+    function goNext(){
+      tapSound();
+      softVibrate(7);
+      if (idx < steps.length - 1) idx++;
+      render();
+    }
+    function goBack(){
+      tapSound();
+      softVibrate(7);
+      if (idx > 0) idx--;
+      render();
+    }
+
+    nextBtn.addEventListener("click", goNext);
+    backBtn.addEventListener("click", goBack);
+
+    smileBtn.addEventListener("click", () => {
+      tapSound();
+      softVibrate(12);
+      smiled = true;
+      softConfetti();
+      render();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === "Enter"){
+        if (!steps[idx].final) goNext();
+      }
+      if (e.key === "ArrowLeft") goBack();
+    });
+
+    render();
+  </script>
+</body>
+</html>
