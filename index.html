@@ -7,7 +7,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -20,8 +20,10 @@
       --shadow: 0 18px 50px rgba(30,30,30,.10);
       --radius: 22px;
     }
+
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
+
     body{
       margin:0;
       background:
@@ -38,24 +40,27 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      padding: 22px 14px;
+      padding:22px 14px;
     }
-    .phone{ width:min(420px, 100%); position:relative; }
+
+    .phone{
+      width:min(420px, 100%);
+      position:relative;
+    }
 
     .card{
-      background: var(--card);
+      background:var(--card);
       border:1px solid var(--border);
-      box-shadow: var(--shadow);
-      border-radius: var(--radius);
-      padding: 26px 20px 18px;
+      box-shadow:var(--shadow);
+      border-radius:var(--radius);
+      padding:26px 20px 18px;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       overflow:hidden;
       position:relative;
-
-      /* (6) subtle “breathing” / float */
       animation: cardFloat 6.5s ease-in-out infinite;
     }
+
     @keyframes cardFloat{
       0%   { transform: translateY(0px); }
       50%  { transform: translateY(-4px); }
@@ -71,6 +76,7 @@
       position:relative;
       z-index:2;
     }
+
     .badge{
       font-size:12px;
       letter-spacing:.12em;
@@ -80,19 +86,22 @@
       align-items:center;
       gap:8px;
     }
+
     .dot{
-      width:8px;height:8px;border-radius:999px;
-      background: var(--accent);
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:var(--accent);
       box-shadow:0 0 0 6px rgba(232,207,198,.28);
     }
 
     .step{
-      min-height: 250px;
+      min-height:250px;
       display:flex;
       flex-direction:column;
       justify-content:center;
       gap:14px;
-      padding: 4px 4px 10px;
+      padding:4px 4px 10px;
       position:relative;
       z-index:2;
     }
@@ -101,115 +110,128 @@
       margin:0;
       font-family:"Playfair Display", serif;
       font-weight:600;
-      font-size: 34px;
+      font-size:34px;
       line-height:1.08;
       letter-spacing:-0.02em;
     }
+
     p{
       margin:0;
-      font-size: 16px;
+      font-size:16px;
       line-height:1.55;
-      color: var(--muted);
+      color:var(--muted);
     }
+
     .name{
       font-family:"Playfair Display", serif;
       font-weight:600;
-      color: var(--text);
-      font-size: 30px;
+      color:var(--text);
+      font-size:30px;
       letter-spacing:-0.01em;
     }
 
     .controls{
       display:flex;
       gap:10px;
-      margin-top: 18px;
+      margin-top:18px;
       flex-wrap:wrap;
       position:relative;
       z-index:2;
     }
+
     button{
       border:1px solid var(--border);
-      background: rgba(255,255,255,.7);
-      color: var(--text);
-      padding: 12px 14px;
-      border-radius: 14px;
-      font-size: 14px;
+      background:rgba(255,255,255,.7);
+      color:var(--text);
+      padding:12px 14px;
+      border-radius:14px;
+      font-size:14px;
       cursor:pointer;
       transition: transform .12s ease, background .2s ease, border-color .2s ease;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
     }
+
     button:hover{ transform: translateY(-1px); }
     button:active{ transform: translateY(0px); }
+
     button.primary{
-      background: var(--text);
-      color: #fff;
-      border-color: rgba(30,30,30,.22);
+      background:var(--text);
+      color:#fff;
+      border-color:rgba(30,30,30,.22);
     }
-    button.ghost{ background: transparent; }
+
+    button.ghost{
+      background:transparent;
+    }
 
     .progress{
       display:flex;
       gap:6px;
       justify-content:center;
-      margin-top: 14px;
+      margin-top:14px;
       position:relative;
       z-index:2;
     }
+
     .pill{
-      width: 18px;
-      height: 4px;
-      border-radius: 999px;
-      background: rgba(30,30,30,.12);
+      width:18px;
+      height:4px;
+      border-radius:999px;
+      background:rgba(30,30,30,.12);
       transition: width .25s ease, background .25s ease;
     }
+
     .pill.active{
-      width: 30px;
-      background: rgba(30,30,30,.38);
+      width:30px;
+      background:rgba(30,30,30,.38);
     }
 
     .fade{
       opacity:0;
-      transform: translateY(6px);
+      transform:translateY(6px);
       transition: opacity .45s ease, transform .45s ease;
     }
+
     .fade.show{
       opacity:1;
-      transform: translateY(0px);
+      transform:translateY(0px);
     }
 
     .flower{
-      width: 140px;
-      height: 140px;
+      width:140px;
+      height:140px;
       position:absolute;
       right:-30px;
       bottom:-42px;
       opacity:.55;
-      transform: rotate(12deg);
+      transform:rotate(12deg);
       pointer-events:auto;
       z-index:1;
       -webkit-tap-highlight-color: transparent;
     }
 
     .footerNote{
-      margin-top: 12px;
-      font-size: 13px;
-      color: rgba(30,30,30,.52);
+      margin-top:12px;
+      font-size:13px;
+      color:rgba(30,30,30,.52);
       text-align:center;
     }
 
-    .hidden{ display:none; }
-
-    @media (max-width:380px){
-      h1{ font-size: 30px; }
-      .name{ font-size: 26px; }
-      .step{ min-height: 265px; }
+    .hidden{
+      display:none !important;
     }
 
-    /* subtle grain */
+    @media (max-width:380px){
+      h1{ font-size:30px; }
+      .name{ font-size:26px; }
+      .step{ min-height:265px; }
+    }
+
     .card:before{
       content:"";
-      position:absolute; inset:0;
+      position:absolute;
+      inset:0;
       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
       opacity:.12;
       mix-blend-mode:multiply;
@@ -217,7 +239,6 @@
       z-index:0;
     }
 
-    /* Confetti dots */
     .confetti-layer{
       position:absolute;
       inset:0;
@@ -225,119 +246,239 @@
       overflow:hidden;
       z-index:3;
     }
+
     .c-dot{
       position:absolute;
       border-radius:999px;
       opacity:0;
-      transform: translateY(10px) scale(.9);
+      transform:translateY(10px) scale(.9);
       animation: pop 980ms cubic-bezier(.2,.8,.2,1) forwards;
     }
+
     @keyframes pop{
       0%   { opacity:0; transform: translateY(14px) scale(.75); }
       18%  { opacity:.95; transform: translateY(0px) scale(1); }
       100% { opacity:0; transform: translateY(-30px) scale(1.06); }
     }
 
-    /* Mood scanner */
     .scanner{
-      margin-top: 10px;
-      padding: 14px 14px 12px;
-      border-radius: 18px;
+      margin-top:10px;
+      padding:14px 14px 12px;
+      border-radius:18px;
       border:1px solid var(--border);
-      background: rgba(255,255,255,.55);
+      background:rgba(255,255,255,.55);
     }
+
     .scannerTop{
       display:flex;
       align-items:baseline;
       justify-content:space-between;
       gap:10px;
-      margin-bottom: 10px;
-    }
-    .scannerLabel{
-      font-size: 13px;
-      color: rgba(30,30,30,.56);
-      letter-spacing:.08em;
-      text-transform: uppercase;
-    }
-    .scannerValue{
-      font-size: 13px;
-      color: rgba(30,30,30,.70);
-      font-variant-numeric: tabular-nums;
-    }
-    input[type="range"]{
-      width:100%;
-      accent-color: var(--text);
-    }
-    .scannerHint{
-      margin-top: 10px;
-      font-size: 14px;
-      line-height:1.45;
-      color: rgba(30,30,30,.62);
+      margin-bottom:10px;
     }
 
-    /* "3 мини-факта" chips */
+    .scannerLabel{
+      font-size:13px;
+      color:rgba(30,30,30,.56);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .scannerValue{
+      font-size:13px;
+      color:rgba(30,30,30,.70);
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type="range"]{
+      width:100%;
+      accent-color:var(--text);
+    }
+
+    .scannerHint{
+      margin-top:10px;
+      font-size:14px;
+      line-height:1.45;
+      color:rgba(30,30,30,.62);
+    }
+
     .chips{
-      margin-top: 10px;
+      margin-top:10px;
       display:flex;
       flex-direction:column;
       gap:10px;
     }
+
     .chip{
       border:1px solid var(--border);
-      background: rgba(255,255,255,.55);
-      border-radius: 16px;
-      padding: 12px 12px;
+      background:rgba(255,255,255,.55);
+      border-radius:16px;
+      padding:12px 12px;
       display:flex;
       gap:10px;
       align-items:flex-start;
-
       opacity:0;
-      transform: translateY(10px);
+      transform:translateY(10px);
       transition: opacity .45s ease, transform .45s ease;
       will-change: transform, opacity;
     }
+
     .chip.show{
       opacity:1;
-      transform: translateY(0px);
+      transform:translateY(0px);
     }
+
     .chipNum{
-      width:24px; height:24px;
-      border-radius: 999px;
+      width:24px;
+      height:24px;
+      border-radius:999px;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size: 12px;
-      color: rgba(30,30,30,.78);
-      background: rgba(232,207,198,.55);
+      font-size:12px;
+      color:rgba(30,30,30,.78);
+      background:rgba(232,207,198,.55);
       flex:0 0 auto;
-      margin-top: 1px;
-    }
-    .chipText{
-      font-size: 15px;
-      line-height:1.45;
-      color: rgba(30,30,30,.68);
+      margin-top:1px;
     }
 
-    /* toast */
+    .chipText{
+      font-size:15px;
+      line-height:1.45;
+      color:rgba(30,30,30,.68);
+    }
+
     .toast{
       position:absolute;
       left:50%;
-      bottom: 14px;
-      transform: translateX(-50%);
-      background: rgba(30,30,30,.86);
-      color: #fff;
-      padding: 10px 12px;
-      border-radius: 14px;
-      font-size: 13px;
+      bottom:14px;
+      transform:translateX(-50%);
+      background:rgba(30,30,30,.86);
+      color:#fff;
+      padding:10px 12px;
+      border-radius:14px;
+      font-size:13px;
       opacity:0;
       pointer-events:none;
       transition: opacity .25s ease, transform .25s ease;
       z-index:4;
       white-space: nowrap;
     }
+
     .toast.show{
       opacity:1;
-      transform: translateX(-50%) translateY(-2px);
+      transform:translateX(-50%) translateY(-2px);
+    }
+
+    .giftCard{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      padding-top:4px;
+    }
+
+    .giftText{
+      font-size:15px;
+      line-height:1.6;
+      color:rgba(30,30,30,.72);
+    }
+
+    .giftBlock{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.58);
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .giftLabel{
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:rgba(30,30,30,.46);
+      margin-bottom:8px;
+    }
+
+    .giftCode{
+      font-size:18px;
+      font-weight:600;
+      letter-spacing:.03em;
+      color:var(--text);
+      word-break:break-word;
+    }
+
+    .giftCodeRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .copyBtn{
+      border:1px solid var(--border);
+      background:white;
+      border-radius:10px;
+      padding:8px 12px;
+      cursor:pointer;
+      font-size:14px;
+      transition: all .15s ease;
+      flex:0 0 auto;
+    }
+
+    .copyBtn:hover{
+      background:#f3f3f3;
+    }
+
+    .copyBtn:active{
+      transform:scale(.96);
+    }
+
+    .giftImageWrap{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.58);
+      border-radius:18px;
+      padding:10px;
+    }
+
+    .giftImage{
+      width:100%;
+      display:block;
+      border-radius:16px;
+      object-fit:cover;
+      box-shadow:0 12px 30px rgba(0,0,0,.15);
+    }
+
+    .giftPlaceholder{
+      width:100%;
+      min-height:220px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:20px;
+      color:rgba(30,30,30,.45);
+      background:linear-gradient(180deg, rgba(232,207,198,.28), rgba(255,255,255,.55));
+      border:1px dashed rgba(30,30,30,.12);
+      line-height:1.5;
+    }
+
+    .giftSupport{
+      margin-top:6px;
+      font-size:14px;
+      color:rgba(30,30,30,.58);
+      text-align:center;
+      line-height:1.5;
+    }
+
+    .giftSupport a{
+      color:var(--text);
+      text-decoration:none;
+      border-bottom:1px dashed rgba(30,30,30,.25);
+      transition:opacity .15s ease;
+    }
+
+    .giftSupport a:hover{
+      opacity:.7;
     }
   </style>
 </head>
@@ -360,6 +501,8 @@
           <button class="ghost" id="backBtn">Назад</button>
           <button class="primary" id="nextBtn">Продолжить →</button>
           <button class="primary hidden" id="smileBtn">Нажать если улыбнулась 🙂</button>
+          <button class="primary hidden" id="giftBtn">Твой подарок 🎁</button>
+          <button class="ghost hidden" id="closeGiftBtn">Закрыть подарок</button>
         </div>
 
         <div class="progress" id="progress"></div>
@@ -384,15 +527,18 @@
   </div>
 
   <script>
-    // имя фиксировано навсегда
     const FIXED_NAME = "Мария";
 
     const qs = new URLSearchParams(location.search);
-    const fromQuery = (qs.get("name") || "").trim(); // оставлено, но FIXED_NAME всегда победит
+    const fromQuery = (qs.get("name") || "").trim();
     const rawName = (FIXED_NAME || fromQuery).trim();
     const safeName = rawName ? rawName.slice(0, 24) : "тебя";
 
-    // iOS-like tap sound
+    // ===== НАСТРОЙКИ ПОДАРКА =====
+    const GIFT_SERIAL = "9900";
+    const GIFT_ELECTRONIC = "9900";
+    const GIFT_IMAGE_SRC = "./karttinka.png";
+
     let audioCtx;
     function tapSound(){
       try{
@@ -417,14 +563,12 @@
       } catch(e){}
     }
 
-    // soft vibration
     function softVibrate(ms=10){
       try{
         if (navigator.vibrate) navigator.vibrate(ms);
       } catch(e){}
     }
 
-    // toast
     const toastEl = document.getElementById("toast");
     let toastTimer = null;
     function showToast(text){
@@ -434,7 +578,6 @@
       toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1200);
     }
 
-    // confetti
     const confettiEl = document.getElementById("confetti");
     function softConfetti(count = 8){
       const rect = confettiEl.getBoundingClientRect();
@@ -462,7 +605,6 @@
       }
     }
 
-    // steps
     const steps = [
       {
         title: "Ты только что отсканировала QR-код.",
@@ -472,7 +614,6 @@
       {
         title: "Это поздравление должно было найти только одного человека.",
         body: [],
-        specialName: true,
         next: "Дальше →"
       },
       {
@@ -482,7 +623,7 @@
       },
       {
         title: "Три маленьких факта.",
-        body: ["Если коротко:"], // ← заменили спорный текст
+        body: ["Если коротко:"],
         chips: [
           "С тобой легко общаться — без напряжения.",
           "Ты умеешь делать простые вещи красивыми.",
@@ -519,6 +660,8 @@
     const nextBtn = document.getElementById("nextBtn");
     const backBtn = document.getElementById("backBtn");
     const smileBtn = document.getElementById("smileBtn");
+    const giftBtn = document.getElementById("giftBtn");
+    const closeGiftBtn = document.getElementById("closeGiftBtn");
     const smallName = document.getElementById("smallName");
     const progressEl = document.getElementById("progress");
     const cardEl = document.getElementById("card");
@@ -535,9 +678,8 @@
 
     let idx = 0;
     let smiled = false;
-
-    // mood scanner state
     let mood = 68;
+    let giftOpen = false;
 
     function moodText(v){
       if (v < 40) return "Принято. Тогда добавим чуть-чуть приятного 🙂";
@@ -549,15 +691,95 @@
       pills.forEach((p,i) => p.classList.toggle("active", i === idx));
     }
 
+    function renderGift(){
+      stepEl.innerHTML = `
+        <div class="giftCard">
+          <h1 class="fade">Твой подарок 🎁</h1>
+
+          <div class="giftText fade">
+            Этот подарок — для тебя.<br><br>
+
+            Я хотел не просто поздравить тебя с 8 марта,
+            а ещё и оставить что-то приятное.<br><br>
+
+            Поэтому здесь для тебя подарочный сертификат —
+            чтобы ты могла выбрать то, что действительно понравится.<br><br>
+
+            Ниже будет сама карточка и код сертификата.
+            Его можно использовать как в магазине, так и на сайте.
+          </div>
+
+          <div class="giftImageWrap fade">
+            ${
+              GIFT_IMAGE_SRC
+                ? `<img src="${GIFT_IMAGE_SRC}" alt="Подарочный сертификат" class="giftImage">`
+                : `<div class="giftPlaceholder">Тут будет картинка сертификата</div>`
+            }
+          </div>
+
+          <div class="giftBlock fade">
+            <div class="giftLabel">Код сертификата</div>
+            <div class="giftCodeRow">
+              <div class="giftCode" id="giftCode">${GIFT_ELECTRONIC}</div>
+              <button class="copyBtn" id="copyBtn" type="button">📋</button>
+            </div>
+          </div>
+
+          <div class="giftSupport fade">
+            По всем вопросам —
+            <a href="https://t.me/AlexeyChetvergov" target="_blank" rel="noopener noreferrer">
+              @AlexeyChetvergov
+            </a>
+          </div>
+        </div>
+      `;
+
+      const items = stepEl.querySelectorAll(".fade");
+      items.forEach((el, i) => setTimeout(() => el.classList.add("show"), 80 + i * 160));
+
+      nextBtn.classList.add("hidden");
+      smileBtn.classList.add("hidden");
+      giftBtn.classList.add("hidden");
+      closeGiftBtn.classList.remove("hidden");
+      progressEl.classList.add("hidden");
+
+      setTimeout(() => {
+        const btn = document.getElementById("copyBtn");
+        if (!btn) return;
+
+        btn.addEventListener("click", async () => {
+          try{
+            await navigator.clipboard.writeText(GIFT_ELECTRONIC);
+            showToast("Код скопирован 📋");
+            tapSound();
+            softVibrate(8);
+          }catch(e){
+            showToast("Не удалось скопировать");
+          }
+        });
+      }, 0);
+    }
+
     function render(){
+      if (giftOpen) {
+        renderGift();
+        return;
+      }
+
       setPills();
 
       backBtn.disabled = idx === 0;
       backBtn.style.opacity = idx === 0 ? .45 : 1;
 
       const current = steps[idx];
-      nextBtn.classList.toggle("hidden", !!current.final);
-      smileBtn.classList.toggle("hidden", !(current.final && !smiled));
+      const isFinal = !!current.final;
+
+      nextBtn.classList.toggle("hidden", isFinal);
+      smileBtn.classList.toggle("hidden", !(isFinal && !smiled));
+      giftBtn.classList.toggle("hidden", !(isFinal && smiled));
+      closeGiftBtn.classList.add("hidden");
+      progressEl.classList.remove("hidden");
+
       nextBtn.textContent = current.next || "Продолжить →";
 
       stepEl.innerHTML = "";
@@ -581,7 +803,6 @@
         stepEl.appendChild(p);
       });
 
-      // chips block (with staggered reveal)
       if (current.chips && current.chips.length){
         const wrap = document.createElement("div");
         wrap.className = "chips fade";
@@ -597,7 +818,6 @@
           wrap.appendChild(chip);
         });
 
-        // IMPORTANT: force hidden state + show one-by-one
         setTimeout(() => {
           const cs = wrap.querySelectorAll(".chip");
           cs.forEach((c) => c.classList.remove("show"));
@@ -605,7 +825,6 @@
         }, 60);
       }
 
-      // mood scanner
       if (current.moodScanner){
         const box = document.createElement("div");
         box.className = "scanner fade";
@@ -633,7 +852,10 @@
             mh.textContent = moodText(mood);
           });
 
-          r.addEventListener("change", () => { tapSound(); softVibrate(8); });
+          r.addEventListener("change", () => {
+            tapSound();
+            softVibrate(8);
+          });
         }, 0);
       }
 
@@ -643,14 +865,6 @@
         tail.style.marginTop = "6px";
         tail.textContent = current.tail;
         stepEl.appendChild(tail);
-      }
-
-      if (current.final && smiled){
-        const p = document.createElement("p");
-        p.className = "fade";
-        p.style.marginTop = "8px";
-        p.textContent = "Отлично. Значит миссия выполнена 🙂";
-        stepEl.appendChild(p);
       }
 
       const items = stepEl.querySelectorAll(".fade");
@@ -663,7 +877,14 @@
       if (idx < steps.length - 1) idx++;
       render();
     }
+
     function goBack(){
+      if (giftOpen) {
+        giftOpen = false;
+        render();
+        return;
+      }
+
       tapSound();
       softVibrate(7);
       if (idx > 0) idx--;
@@ -678,17 +899,51 @@
       softVibrate(12);
       smiled = true;
       softConfetti(10);
+
+      smileBtn.classList.add("hidden");
+      giftBtn.classList.remove("hidden");
+
+      const existing = document.getElementById("smileMessage");
+      if (!existing) {
+        const p = document.createElement("p");
+        p.id = "smileMessage";
+        p.className = "fade";
+        p.style.marginTop = "8px";
+        p.textContent = "Отлично. Значит миссия выполнена 🙂";
+        stepEl.appendChild(p);
+        requestAnimationFrame(() => p.classList.add("show"));
+      }
+    });
+
+    giftBtn.addEventListener("click", () => {
+      tapSound();
+      softVibrate(12);
+      giftOpen = true;
+      render();
+    });
+
+    closeGiftBtn.addEventListener("click", () => {
+      tapSound();
+      softVibrate(8);
+      giftOpen = false;
       render();
     });
 
     document.addEventListener("keydown", (e) => {
+      if (giftOpen) {
+        if (e.key === "ArrowLeft" || e.key === "Escape") {
+          giftOpen = false;
+          render();
+        }
+        return;
+      }
+
       if (e.key === "ArrowRight" || e.key === "Enter"){
         if (!steps[idx].final) goNext();
       }
       if (e.key === "ArrowLeft") goBack();
     });
 
-    // (5) easter egg: long-press anywhere on the card + double-tap on flower
     let pressTimer = null;
     let pressed = false;
 
@@ -706,13 +961,13 @@
         egg();
       }, 700);
     }
+
     function endPress(){
       pressed = false;
       if (pressTimer) clearTimeout(pressTimer);
       pressTimer = null;
     }
 
-    // long-press on the whole card (more reliable)
     cardEl.addEventListener("pointerdown", (e) => {
       if (e.target && (e.target.closest("button") || e.target.closest("input"))) return;
       startPress();
@@ -721,7 +976,6 @@
     cardEl.addEventListener("pointercancel", endPress);
     cardEl.addEventListener("pointerleave", endPress);
 
-    // double-tap on flower (backup)
     let lastTap = 0;
     flowerEl.addEventListener("click", () => {
       const now = Date.now();
